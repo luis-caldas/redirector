@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Redirector</title>
+    <style>
+        * {
+            font-family: monospace;
+        }
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            display: none;
+        }
+        div#whole {
+            width: 100%;
+            margin: auto;
+            text-align: center;
+        }
+        input#url {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="whole">
+    <div>Please enter the URL in which you'd like to be redirected to:</div>
+    <div>
+        <label><input type="text" id="url"></label>
+        <label><input type="button" id="btn" value="Submit"></label>
+    </div>
+</div>
+<script>
+    "use strict";
+    // Save the name of the local storage variable
+    const urlName = "page";
+    // Names of IDs used
+    const textId = "url";
+    const buttonId = "btn";
+    // What kind of display should be used
+    const displayWhat = "flex";
+
+    // Check if we have the needed parameter to ask for input
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceAsk = urlParams.has("ask");
+
+    // Try to get our needed local data
+    const localPage = localStorage.getItem(urlName);
+
+    // Check should we redirect straight away
+    if (forceAsk || localPage === null) {
+        // Show the body
+        let [tag] = document.getElementsByTagName("body")
+        tag.style.display = displayWhat;
+    } else
+        window.location.replace(localPage);
+
+    // Function to save and redirect
+    const save = function() {
+
+        // Get the information
+        let urlTag = document.getElementById(textId);
+        let value = urlTag.value;
+
+        // Simple error checking for emptiness
+        if (!value) {
+            alert("Unable to save URL");
+            return null;
+        }
+
+        // Store it
+        localStorage.setItem(urlName, value);
+
+        // Redirect user straight away
+        window.location.replace(localStorage.getItem(urlName));
+
+    };
+
+    // Trigger on click and enter
+    // Get the needed field
+    let input = document.getElementById(textId);
+    let button = document.getElementById(buttonId);
+    // Simulate a click on the button when enter is pressed
+    input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            button.click();
+        }
+    });
+    // Run the save function on button click
+    button.addEventListener("click", save);
+
+</script>
+</body>
+</html>

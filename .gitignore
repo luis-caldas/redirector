@@ -1,0 +1,4 @@
+# All hidden
+.*
+# Bar gitignore
+!.gitignore
